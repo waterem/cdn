@@ -162,7 +162,8 @@ func Delete(w http.ResponseWriter, r *http.Request) string {
 		log.Info("User " + user + ", quota usage -" + strconv.Itoa(int(f.Size())))
 	}
 
-	if db.Delete(user, repo[3], id) == 0 {
+	x := db.Delete(user, repo[3], id)
+	if x == 1 {
 		log.Warn("Removing " + id + " from disk")
 		// torrent.Delete(id)
 		if log.Check(log.WarnLevel, "Removing "+info["name"]+"from disk", os.Remove(config.Storage.Path+md5)) {
