@@ -732,6 +732,23 @@ func CheckRepo(owner, repo, hash string) (val int) {
 	return val
 }
 
+//count md5
+func CountMd5(hash string) (md5 int) {
+	db.View(func(tx *bolt.Tx) error {
+		if b := tx.Bucket(bucket); b != nil {
+			b.ForEach(func(k, v []byte) error {
+				if b := b.Bucket(k).Bucket([]byte("hash")); b != nil {
+					if string(b.Get([]byte("md5"))) == hash {
+						md5++
+					}
+				}
+				return nil
+			})
+		}
+		return nil
+	})
+	return md5
+}
 // RemoveTags deletes tag from index bucket and file information.
 // It should be executed on every file deletion to keep DB consistant.
 func RemoveTags(key, list string) error {

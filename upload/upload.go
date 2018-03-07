@@ -147,7 +147,10 @@ func Delete(w http.ResponseWriter, r *http.Request) string {
 		w.Write([]byte("Bad request"))
 		return ""
 	}
-	if db.CheckRepo(user, repo[3], id) == 0 && user != "subutai" {
+	fmt.Print("All files of user " + user + " " )
+	fmt.Println(db.All(user))
+	x := db.CheckRepo(user, repo[3], id)
+	if x == 0 && user != "subutai" {
 		log.Warn("File " + info["name"] + "(" + id + ") in " + repo[3] + " repo is not owned by " + user + ", rejecting deletion request")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("File " + info["name"] + " not found or it has different owner"))
@@ -161,9 +164,9 @@ func Delete(w http.ResponseWriter, r *http.Request) string {
 		db.QuotaUsageSet(user, -int(f.Size()))
 		log.Info("User " + user + ", quota usage -" + strconv.Itoa(int(f.Size())))
 	}
-
-	x := db.Delete(user, repo[3], id)
-	if x == 1 {
+	db.Delete(user, repo[3], id)
+	x1 := db.CountMd5(md5)
+	if x1 == 0 {
 		log.Warn("Removing " + id + " from disk")
 		// torrent.Delete(id)
 		if log.Check(log.WarnLevel, "Removing "+info["name"]+"from disk", os.Remove(config.Storage.Path+md5)) {
