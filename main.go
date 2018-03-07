@@ -18,6 +18,7 @@ import (
 	"github.com/subutai-io/gorjun/raw"
 	"github.com/subutai-io/gorjun/template"
 	"github.com/subutai-io/gorjun/upload"
+	"fmt"
 )
 
 var version = "6.3.0"
@@ -37,7 +38,6 @@ func main() {
 	// defer torrent.Close()
 	// go torrent.SeedLocal()
 	go RunTask()
-
 	if len(config.CDN.Node) > 0 {
 		target := url.URL{Scheme: "https", Host: config.CDN.Node}
 		proxy := httputil.NewSingleHostReverseProxy(&target)
@@ -61,7 +61,11 @@ func main() {
 		return
 	}
 
-	log.Info("Server has started. " + "Listening at " + "127.0.0.1:8080")
+	log.Info("Server has started. " + "Listening at " + "127.0.0.1:" + config.Network.Port)
+
+	fmt.Println(db.CheckRepo("5d10750471b058caffabbec09933cc1b52de6f5b", "template","00e4342b-6747-470f-a0c3-b0d2cdf1c009"))
+	fmt.Println(db.CheckRepo("9e975e12a41aef982026dfe205c2de5f324786da", "apt","78b25486187bb9f426e6cfdb85fc6d6e"))
+
 
 	http.HandleFunc("/kurjun/rest/file/get", raw.Download)
 	http.HandleFunc("/kurjun/rest/file/info", raw.Info)

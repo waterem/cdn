@@ -10,10 +10,11 @@ import (
 	"strconv"
 	"testing"
 	"time"
+	"github.com/stretchr/testify/assert"
 )
 
 //TestGorjunServer_CheckingFilesAfterDeleting will upload templates
-//after will delete all templates and outputs file on gorjun directory
+//after will delete all templates and outputs files on gorjun directory
 func TestGorjunServer_CheckingFilesAfterDeleting(t *testing.T) {
 	g := NewGorjunServer()
 	output, _ := exec.Command("bash", "-c", "gpg --armor --export tester").Output()
@@ -71,4 +72,55 @@ func TestGorjunServer_CheckingFilesAfterDeleting(t *testing.T) {
 	}
 	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
 	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting templates \n%s\n", output)
+	assert.Equal(t, 0, len(output))
+}
+
+
+//TestGorjunServer_TwoUserUploadsSameTemplate two different
+//user will upload same template
+//First user will delete his template, second user won't
+//Second user should able to download his template
+func TestGorjunServer_TwoUserUploadsSameTemplate(t *testing.T) {
+	g := NewGorjunServer()
+	output, _ := exec.Command("bash", "-c", "gpg --armor --export tester").Output()
+	g.RegisterUser(g.Username, string(output))
+	err := g.AuthenticateUser()
+	if err != nil {
+		t.Errorf("Authnetication failure: %v", err)
+	}
+
+	idFirstTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template")
+	if err != nil {
+		t.Errorf("Failed to upload: %v", err)
+	}
+	fmt.Printf("Template uploaded successfully, id : %s\n", idFirstTemplate)
+
+	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting templates \n%s\n", output)
+	assert.NotEqual(t, 0, len(output))
+
+	g = NewGorjunServer()
+	output, _ = exec.Command("bash", "-c", "gpg --armor --export emilbeksulaymanov").Output()
+	g.Username = "emilbeksulaymanov"
+	g.RegisterUser(g.Username, string(output))
+	err = g.AuthenticateUser()
+	if err != nil {
+		t.Errorf("Authnetication failure: %v", err)
+	}
+
+	idSecondTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template")
+	if err != nil {
+		t.Errorf("Failed to upload: %v", err)
+	}
+	fmt.Printf("Template uploaded successfully, id : %s\n", idSecondTemplate)
+
+	//err = g.RemoveFileByID(idFirstTemplate, "template")
+	//if err != nil {
+	//	t.Errorf("Failed to remove file: %v", err)
+	//}
+	//fmt.Printf("Template removed successfully, id : %s\n", idFirstTemplate)
+
+	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting templates \n%s\n", output)
+	assert.NotEqual(t, 0, len(output))
 }

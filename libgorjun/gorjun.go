@@ -179,6 +179,9 @@ func (g *GorjunServer) RemoveFileByID(ID string, artifactType string) error {
 	}
 	fmt.Printf("\nId of artifact with type %s is %s deleted\n", artifactType, ID)
 	fmt.Printf("\n%s\n", req.URL)
+	fmt.Printf("\nResponse from gorjun = ")
+	io.Copy(os.Stdout, res.Body)
+	fmt.Println()
 	return nil
 }
 

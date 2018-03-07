@@ -130,11 +130,12 @@ func Delete(owner, repo, key string) (total int) {
 
 		owned := CheckRepo(owner, "", key)
 		md5, _ := Hash(key)
-		if key == md5 {
-			total = CheckRepo("", "", key)
-		} else {
-			total = CheckRepo("", "", md5)
-		}
+
+		x := CheckRepo("", "", key)
+		y := CheckRepo("", "", md5)
+		fmt.Println("Check repo by id", x)
+		fmt.Println("Check repo by md5", y)
+		total = CheckRepo("", "", key)
 
 		// Deleting user association with file
 		if b := tx.Bucket(bucket).Bucket([]byte(key)); b != nil {

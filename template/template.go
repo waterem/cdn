@@ -117,6 +117,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		log.Info(t.Name + " saved to template repo by " + owner)
 
 		if IDs := db.UserFile(owner, filename); len(IDs) > 0 {
+			log.Info("Deleting old templates with same version")
 			for _, ID := range IDs {
 				if ID == t.ID {
 					continue
