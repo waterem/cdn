@@ -184,7 +184,7 @@ func Delete(owner, repo, key string) (total int) {
 		}
 		return nil
 	})
-	return total - 1
+	return total
 }
 
 // Read returns name by ID
@@ -431,7 +431,23 @@ func UserFile(owner, file string) (list []string) {
 	})
 	return list
 }
-
+// All artifact of user
+func All(owner string) (list []string) {
+	db.View(func(tx *bolt.Tx) error {
+		if b := tx.Bucket(users).Bucket([]byte(owner)); b != nil {
+			if files := b.Bucket([]byte("files")); files != nil {
+				files.ForEach(func(k, v []byte) error {
+					{
+						list = append(list, string(k))
+					}
+					return nil
+				})
+			}
+		}
+		return nil
+	})
+	return list
+}
 // GetScope shows users with whom shared a certain owner of the file
 func GetScope(hash, owner string) (scope []string) {
 	scope = []string{}
