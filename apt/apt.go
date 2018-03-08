@@ -84,7 +84,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		if len(md5) == 0 || len(sha256) == 0 {
 			return
 		}
-		control, err := readDeb(md5)
+		control, err := readDeb(header.Filename)
 		if err != nil {
 			log.Warn(err.Error())
 			w.WriteHeader(http.StatusUnsupportedMediaType)
@@ -105,8 +105,11 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		db.Write(owner, md5, header.Filename, meta)
 		w.Write([]byte(md5))
 		log.Info(meta["Filename"] + " saved to apt repo by " + owner)
-		os.Rename(config.Storage.Path+md5, config.Storage.Path+header.Filename)
-		renameOldDebFiles()
+		//Should delete this line, because it saving apt file with extension in Handler
+		//os.Rename(config.Storage.Path+md5, config.Storage.Path+header.Filename)
+
+		//Need to delete this line, because it released to prod, no need to use this function
+		//renameOldDebFiles()
 	}
 }
 

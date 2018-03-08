@@ -136,39 +136,39 @@ func TestGorjunServer_UploadOneFilesToAllRepos(t *testing.T) {
 		t.Errorf("Authnetication failure: %v", err)
 	}
 
-	//idRaw, err := g.Upload("data/winff_1.5.5-1_all.deb", "raw")
-	//if err != nil {
-	//	t.Errorf("Failed to upload: %v", err)
-	//}
-	//fmt.Printf("Raw uploaded successfully, id : %s\n", idRaw)
+	idRaw, err := g.Upload("data/winff_1.5.5-1_all.deb", "raw")
+	if err != nil {
+		t.Errorf("Failed to upload: %v", err)
+	}
+	fmt.Printf("Raw uploaded successfully, id : %s\n", idRaw)
 
-	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
-	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
-	//assert.NotEqual(t, 0, len(output))
-	//
+	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
+	assert.NotEqual(t, 0, len(output))
+
 	idDeb, err := g.Upload("data/winff_1.5.5-1_all.deb", "apt")
 	if err != nil {
 		t.Errorf("Failed to upload: %v", err)
 	}
 	fmt.Printf("Apt uploaded successfully, id : %s\n", idDeb)
 
-	//err = g.RemoveFileByID(idRaw, "raw")
-	//if err != nil {
-	//	t.Errorf("Failed to remove file: %v", err)
-	//}
-	//fmt.Printf("Raw removed successfully, id : %s\n", idRaw)
+	err = g.RemoveFileByID(idRaw, "raw")
+	if err != nil {
+		t.Errorf("Failed to remove file: %v", err)
+	}
+	fmt.Printf("Raw removed successfully, id : %s\n", idRaw)
 
-	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
-	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
-	//assert.NotEqual(t, 0, len(output))
-	//
-	//err = g.RemoveFileByID(idRaw, "apt")
-	//if err != nil {
-	//	t.Errorf("Failed to remove file: %v", err)
-	//}
-	//fmt.Printf("Apt removed successfully, id : %s\n", idDeb)
-	//
-	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
-	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting deb files \n%s\n", output)
-	//assert.Equal(t, 0, len(output))
+	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
+	assert.NotEqual(t, 0, len(output))
+
+	err = g.RemoveFileByID(idDeb, "apt")
+	if err != nil {
+		t.Errorf("Failed to remove file: %v", err)
+	}
+	fmt.Printf("Apt removed successfully, id : %s\n", idDeb)
+
+	output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting deb files \n%s\n", output)
+	assert.Equal(t, 0, len(output))
 }

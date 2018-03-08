@@ -36,6 +36,18 @@ func Handler(w http.ResponseWriter, r *http.Request) (md5sum, sha256sum, owner s
 		log.Warn(r.RemoteAddr + " - rejecting unauthorized upload request")
 		return
 	}
+
+	//Need to add this code, because I need catch repo.
+	//When deb file uploaded it's saving first with extension
+	// after it's renaming to filename to md5
+	// I need avoid this
+	repo := strings.Split(r.URL.EscapedPath(), "/")
+	if len(repo) < 4 {
+		log.Warn(r.URL.EscapedPath() + " - bad deletion request")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Bad request"))
+		return
+	}
 	r.ParseMultipartForm(32 << 20)
 
 	file, header, err := r.FormFile("file")
@@ -88,7 +100,9 @@ func Handler(w http.ResponseWriter, r *http.Request) (md5sum, sha256sum, owner s
 		return
 	}
 
-	os.Rename(config.Storage.Path+header.Filename, config.Storage.Path+md5sum)
+	if repo[3] != "apt" {
+		os.Rename(config.Storage.Path+header.Filename, config.Storage.Path+md5sum)
+	}
 	log.Info("File received: " + header.Filename + "(" + md5sum + ")")
 
 	return md5sum, sha256sum, owner
@@ -166,7 +180,8 @@ func Delete(w http.ResponseWriter, r *http.Request) string {
 	}
 	db.Delete(user, repo[3], id)
 	x1 := db.CountMd5(md5)
-	if x1 == 0 {
+	//Add this line , because deb files saves by filename not by md5
+	if x1 == 0 && repo[3] != "apt" {
 		log.Warn("Removing " + id + " from disk")
 		// torrent.Delete(id)
 		if log.Check(log.WarnLevel, "Removing "+info["name"]+"from disk", os.Remove(config.Storage.Path+md5)) {
