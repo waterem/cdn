@@ -124,3 +124,51 @@ func TestGorjunServer_TwoUserUploadsSameTemplate(t *testing.T) {
 	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting templates \n%s\n", output)
 	assert.NotEqual(t, 0, len(output))
 }
+
+//TestGorjunServer_UploadOneFilesToAllRepos will upload
+//one deb file to 2 repo, and will delete one by one
+func TestGorjunServer_UploadOneFilesToAllRepos(t *testing.T) {
+	g := NewGorjunServer()
+	output, _ := exec.Command("bash", "-c", "gpg --armor --export tester").Output()
+	g.RegisterUser(g.Username, string(output))
+	err := g.AuthenticateUser()
+	if err != nil {
+		t.Errorf("Authnetication failure: %v", err)
+	}
+
+	//idRaw, err := g.Upload("data/winff_1.5.5-1_all.deb", "raw")
+	//if err != nil {
+	//	t.Errorf("Failed to upload: %v", err)
+	//}
+	//fmt.Printf("Raw uploaded successfully, id : %s\n", idRaw)
+
+	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
+	//assert.NotEqual(t, 0, len(output))
+	//
+	idDeb, err := g.Upload("data/winff_1.5.5-1_all.deb", "apt")
+	if err != nil {
+		t.Errorf("Failed to upload: %v", err)
+	}
+	fmt.Printf("Apt uploaded successfully, id : %s\n", idDeb)
+
+	//err = g.RemoveFileByID(idRaw, "raw")
+	//if err != nil {
+	//	t.Errorf("Failed to remove file: %v", err)
+	//}
+	//fmt.Printf("Raw removed successfully, id : %s\n", idRaw)
+
+	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
+	//assert.NotEqual(t, 0, len(output))
+	//
+	//err = g.RemoveFileByID(idRaw, "apt")
+	//if err != nil {
+	//	t.Errorf("Failed to remove file: %v", err)
+	//}
+	//fmt.Printf("Apt removed successfully, id : %s\n", idDeb)
+	//
+	//output, _ = exec.Command("bash", "-c", " ls /opt/gorjun/data/files/").Output()
+	//fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting deb files \n%s\n", output)
+	//assert.Equal(t, 0, len(output))
+}

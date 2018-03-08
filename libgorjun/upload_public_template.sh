@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 URL=http://127.0.0.1:8080
 NAME=emilbeksulaymanov
 
@@ -75,7 +76,9 @@ curl -ks -Ftoken="$TOKEN" -Fsignature="$SIGN" "$URL/auth/sign"
 
 echo -e "\\nCompleted"
 
-
-curl -v -X "DELETE"  "$URL/template/delete?id=$ID_FIRST_TEMPLATE&token=$TOKEN"
-
+echo -e "ID of first template $ID_FIRST_TEMPLATE"
+echo -e "ID of second template $ID"
+echo -e "\\nCompleted"
+curl -v -X "DELETE"  "$URL/template/delete?id=$ID_FIRST_TEMPLATE&token=$TOKEN_OF_FIRST_USER"
+curl -v -X "DELETE"  "$URL/template/delete?id=$ID&token=$TOKEN"
 
