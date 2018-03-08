@@ -137,6 +137,10 @@ func Info(repo string, r *http.Request) []byte {
 	subname := r.URL.Query().Get("subname")
 	version := r.URL.Query().Get("version")
 	verified := r.URL.Query().Get("verified")
+	//If owner not provided it should take from owner
+	if len(strings.ToLower(db.CheckToken(token))) > 0 {
+		owner = strings.ToLower(db.CheckToken(token))
+	}
 	if len(subname) != 0 {
 		name = subname
 	}

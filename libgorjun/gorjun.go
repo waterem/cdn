@@ -29,7 +29,10 @@ func NewGorjunServer() GorjunServer {
 	return GorjunServer{"tester", "tester@gmail.com", "127.0.0.1:8080", os.Getenv("HOME") + "/.gnupg",
 		"", "", "pantano"}
 }
-
+func SecondNewGorjunServer() GorjunServer {
+	return GorjunServer{"emilbeksulaymanov", "emilbeksulaymanov@gmail.com", "127.0.0.1:8080", os.Getenv("HOME") + "/.gnupg",
+		"", "", ""}
+}
 // GorjunFile is a file located on Gorjun bucket server
 type GorjunFile struct {
 	ID           string            `json:"id"`
