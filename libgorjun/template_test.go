@@ -29,7 +29,7 @@ func TestGorjunServer_CheckingFilesAfterDeleting(t *testing.T) {
 	Shuffle(templateVersions)
 
 	for _, version := range templateVersions {
-		id, err := g.Upload("data/nginx-subutai-template_"+version+"_amd64.tar.gz", "template")
+		id, err := g.Upload("data/nginx-subutai-template_"+version+"_amd64.tar.gz", "template","false")
 		if err != nil {
 			t.Errorf("Failed to upload: %v", err)
 		}
@@ -89,7 +89,7 @@ func TestGorjunServer_TwoUserUploadsSameTemplate(t *testing.T) {
 		t.Errorf("Authnetication failure: %v", err)
 	}
 
-	idFirstTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template")
+	idFirstTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template","false")
 	if err != nil {
 		t.Errorf("Failed to upload: %v", err)
 	}
@@ -108,7 +108,7 @@ func TestGorjunServer_TwoUserUploadsSameTemplate(t *testing.T) {
 		t.Errorf("Authnetication failure: %v", err)
 	}
 
-	idSecondTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template")
+	idSecondTemplate, err := g.Upload("data/abdysamat-apache-subutai-template_4.0.0_amd64.tar.gz", "template","false")
 	if err != nil {
 		t.Errorf("Failed to upload: %v", err)
 	}
@@ -136,7 +136,7 @@ func TestGorjunServer_UploadOneFilesToAllRepos(t *testing.T) {
 		t.Errorf("Authnetication failure: %v", err)
 	}
 
-	idRaw, err := g.Upload("data/winff_1.5.5-1_all.deb", "raw")
+	idRaw, err := g.Upload("data/winff_1.5.5-1_all.deb", "raw","false")
 	if err != nil {
 		t.Errorf("Failed to upload: %v", err)
 	}
@@ -146,7 +146,7 @@ func TestGorjunServer_UploadOneFilesToAllRepos(t *testing.T) {
 	fmt.Printf("\nList of files in /opt/gorjun/data/files/ directory after deleting raw files \n%s\n", output)
 	assert.NotEqual(t, 0, len(output))
 
-	idDeb, err := g.Upload("data/winff_1.5.5-1_all.deb", "apt")
+	idDeb, err := g.Upload("data/winff_1.5.5-1_all.deb", "apt","false")
 	if err != nil {
 		t.Errorf("Failed to upload: %v", err)
 	}

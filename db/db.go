@@ -432,12 +432,12 @@ func UserFile(owner, file string) (list []string) {
 	return list
 }
 // All artifact of user
-func All(owner string) (list []string) {
+func All(owner string,repo string) (list []string) {
 	db.View(func(tx *bolt.Tx) error {
 		if b := tx.Bucket(users).Bucket([]byte(owner)); b != nil {
 			if files := b.Bucket([]byte("files")); files != nil {
 				files.ForEach(func(k, v []byte) error {
-					{
+					if CheckRepo(owner, repo, string(k)) > 0 {
 						list = append(list, string(k))
 					}
 					return nil

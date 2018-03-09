@@ -29,7 +29,7 @@ func TestGorjunServer_CheckingRawFilesAfterDeleting(t *testing.T) {
 	Shuffle(templateVersions)
 
 	for _, version := range templateVersions {
-		id, err := g.Upload("data/nginx-subutai-template_"+version+"_amd64.tar.gz", "raw")
+		id, err := g.Upload("data/nginx-subutai-template_"+version+"_amd64.tar.gz", "raw","false")
 		if err != nil {
 			t.Errorf("Failed to upload: %v", err)
 		}

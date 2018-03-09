@@ -33,6 +33,11 @@ func SecondNewGorjunServer() GorjunServer {
 	return GorjunServer{"emilbeksulaymanov", "emilbeksulaymanov@gmail.com", "127.0.0.1:8080", os.Getenv("HOME") + "/.gnupg",
 		"", "", ""}
 }
+
+func VerifiedUser() GorjunServer {
+	return GorjunServer{"subutai", "subutai@subut.ai", "127.0.0.1:8080", os.Getenv("HOME") + "/.gnupg",
+		"", "", ""}
+}
 // GorjunFile is a file located on Gorjun bucket server
 type GorjunFile struct {
 	ID           string            `json:"id"`
@@ -105,7 +110,7 @@ func (g *GorjunServer) GetFileByName(filename string, artifactType string) ([]Go
 }
 
 // UploadFile will upload file and return it's ID after successful upload
-func (g *GorjunServer) Upload(filename string, artifactType string) (string, error) {
+func (g *GorjunServer) Upload(filename string, artifactType string, private string) (string, error) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		return "", fmt.Errorf("%s not found", filename)
 	}
@@ -127,6 +132,12 @@ func (g *GorjunServer) Upload(filename string, artifactType string) (string, err
 		return "", fmt.Errorf("Failed to create token form field: %v", err)
 	}
 	if _, err = fw.Write([]byte(g.Token)); err != nil {
+		return "", fmt.Errorf("Failed to write token: %v", err)
+	}
+	if fw, err = w.CreateFormField("private"); err != nil {
+		return "", fmt.Errorf("Failed to create token form field: %v", err)
+	}
+	if _, err = fw.Write([]byte(private)); err != nil {
 		return "", fmt.Errorf("Failed to write token: %v", err)
 	}
 

@@ -162,7 +162,7 @@ func Delete(w http.ResponseWriter, r *http.Request) string {
 		return ""
 	}
 	fmt.Print("All files of user " + user + " " )
-	fmt.Println(db.All(user))
+	//fmt.Println(db.All(user))
 	x := db.CheckRepo(user, repo[3], id)
 	if x == 0 && user != "subutai" {
 		log.Warn("File " + info["name"] + "(" + id + ") in " + repo[3] + " repo is not owned by " + user + ", rejecting deletion request")
